@@ -1,5 +1,8 @@
 package com.JuanPablo.conversorMoneda.clases;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,12 +20,19 @@ public class Busqueda {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Resultado de la conversion: ");
-            System.out.println(response.body());
+            JsonObject jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject();
+
+            double conversionRate = jsonResponse.get("conversion_rate").getAsDouble();
+
+            double resultado = cantidad * conversionRate;
+
+            System.out.println("Resultado de la conversion: " + resultado + " " + moneda2);
+
+
+
         } catch (Exception e) {
             System.out.println("Error al realizar la busqueda: " + e.getMessage());
         }
-
     }
 }
 
